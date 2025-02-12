@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup & Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        input, button { margin: 10px; padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <h2>Signup</h2>
+    <input type="text" id="signupUsername" placeholder="Username">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <button onclick="signup()">Signup</button>
+
+    <h2>Login</h2>
+    <input type="text" id="loginUsername" placeholder="Username">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+
+    <h2>Session</h2>
+    <button onclick="checkSession()">Check Session</button>
+    <button onclick="logout()">Logout</button>
+
+    <p id="message"></p>
+
+    <script>
+        const API_URL = "https://your-backend-url.onrender.com";  // Change this to your Railway URL
+
+        async function signup() {
+            let username = document.getElementById("signupUsername").value;
+            let password = document.getElementById("signupPassword").value;
+
+            let res = await fetch(API_URL + "/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            });
+
+            let data = await res.json();
+            document.getElementById("message").innerText = data.message;
+        }
+
+        async function login() {
+            let username = document.getElementById("loginUsername").value;
+            let password = document.getElementById("loginPassword").value;
+
+            let res = await fetch(API_URL + "/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+                credentials: "include",
+            });
+
+            let data = await res.json();
+            document.getElementById("message").innerText = data.message;
+        }
+
+        async function checkSession() {
+            let res = await fetch(API_URL + "/check-session", { credentials: "include" });
+            let data = await res.json();
+            document.getElementById("message").innerText = data.user ? "Logged in as " + data.user : "Not logged in";
+        }
+
+        async function logout() {
+            let res = await fetch(API_URL + "/logout", { credentials: "include" });
+            let data = await res.json();
+            document.getElementById("message").innerText = data.message;
+        }
+    </script>
+
+</body>
+</html>
